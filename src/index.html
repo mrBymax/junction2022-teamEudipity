@@ -6,9 +6,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Election Results</title>
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <link href="css/button.css" rel="stylesheet">
 </head>
 <body>
+
+    <section class="login-box">
+        <h2>Login</h2>
+        <a href="#" class="login-btn neon-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            🔓 Log in with Web3
+          </a>
+          
+        <span class="instruction">
+          Ensure to have an Ethereum based wallet installed i.e MetaMask
+        </span>
+      </section>
+  
+      <!-- DASHBOARD SECTION -->
+      <section class="dashboard-section">
+        <h2 class="wallet-status">Wallet Connected!</h2>
+        
+        <h3 class="wallet-address-heading">
+          ETH Wallet Address:
+          <span class="wallet-address"></span>
+        </h3>
+        <!--
+        <h3 class="wallet-balance-heading">
+            ETH Balance:
+            <span class="wallet-balance"></span>
+        </h3>-->
+
+        <div class="parties">
+            
+            <ul class="parties-list"></ul>
+        </div>
+
+
+
+        <div class="buttons">
+            <a href="#" class="logout-btn red neon-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                🔒 Log out
+            </a>
+
+            <a href="#" class="vote-btn green neon-btn">
+                <span class="animated"></span>
+                <span class="animated"></span>
+                <span class="animated"></span>
+                <span class="animated"></span>
+                🗳️ Vote
+            </a>
+        </div>
+      </section>
+
+      <!--
 <div class="container" style="width: 650px;">
     <div class="row">
         <div class="col-lg-12">
@@ -45,6 +103,7 @@
         </div>
     </div>
 </div>
+-->
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->

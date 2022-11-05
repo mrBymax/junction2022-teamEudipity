@@ -6,7 +6,9 @@ window.onload = async (event) => {
   // check if ethereum extension is installed
   if (window.ethereum) {
     // create web3 instance
-    window.web3 = new Web3(window.ethereum);
+    let web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+    window.web3 = new Web3(web3Provider);
+    //window.web3 = new Web3(window.ethereum);
   } else {
     // prompt user to install Metamask
     alert("Please install MetaMask or any Ethereum Extension Wallet");
@@ -50,8 +52,7 @@ const loginWithEth = async () => {
       window.localStorage.setItem("userWalletAddress", selectedAccount);
 
       // show the user dashboard
-      showUserDashboard();
-      deanimateButton();
+      
     } catch (error) {
       alert(error);
       deanimateButton();
@@ -94,6 +95,8 @@ const showUserDashboard = async () => {
 
   // get the user's wallet balance
   getWalletBalance();
+
+  loadPartiesList();
 };
 
 // show the user's wallet address from the global userWalletAddress variable
@@ -136,3 +139,94 @@ document.querySelector(".login-btn").addEventListener("click", loginWithEth);
 
 // when the user clicks the logout button run the logout function
 document.querySelector(".logout-btn").addEventListener("click", logout);
+
+var transend       = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd',
+    animated_class = 'animated';
+
+function staggerSlide() {
+  var $feature = $(this).closest('.feature');
+
+  $feature
+    .children('.features-list')
+    .children('.features-list__item')
+    .addClass(animated_class);
+
+  $feature.next().addClass(animated_class);
+}
+
+function activateStagger() {
+  $('.feature:first').addClass(animated_class);
+  $('.list-title').on(transend, staggerSlide);
+}
+
+// $(window).on('load', activateStagger);
+
+function loadPartiesList(){
+  // Load the contract
+  $.getJSON("Election.json", function (election) {
+      // Instantiate a new truffle contract from the artifact
+      let ElectionContract = TruffleContract(election);
+      let electionInstance;
+      // Connect provider to interact with contract
+      ElectionContract.setProvider(window.web3);
+
+      ElectionContract.deployed().then((instance) => {
+        debugger;
+        electionInstance = instance;
+        return electionInstance.candidatesCount();
+      }).then(function (candidatesCount) {
+        var listContent = [];
+        debugger;
+        for (var i = 1; i <= candidatesCount; i++) {
+            electionInstance.candidates(i).then(function (candidate) {
+                var id = candidate[0];
+                var name = candidate[1];
+                var voteCount = candidate[2];
+
+                listContent.push(document.createElement("li"));
+                listContent[i].style = "display: none";
+                listContent[i].innerHTML = `<input type="radio" value="${name}" id="${id}" name="chosen_party" /> <label for="${id}">${name}</label>`;
+                
+                /*
+                // Render candidate Result
+                var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
+                candidatesResults.append(candidateTemplate);
+                // Render candidate ballot option
+                var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
+                candidatesSelect.append(candidateOption);*/
+
+                if(i == candidatesCount){
+                  // complete loading
+                  showUserDashboard();
+                  deanimateButton();
+
+                  $(".parties .parties-list").append(listContent);
+                  $('.parties .parties-list li').each(function(){
+                      var elem = $(this);
+                      setTimeout(function(){
+                      elem.show(200);
+                      }, 100 * elem.index());
+                  });
+                }
+            });
+        }
+
+        
+
+        return electionInstance.voters(App.account);
+    }).then(function (hasVoted) {
+        // Do not allow a user to vote
+        if (hasVoted) {
+          alert("BRO HAI GIA VOTATO");
+          $("input").prop("disabled", true);
+        }
+    }).catch(function (error) {
+        console.warn(error);
+    });
+
+    });
+}
+
+$(document).on("click", "li", (e) => {
+    $(e.target).find("input").click()
+})

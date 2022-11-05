@@ -3,6 +3,7 @@ App = {
     contracts: {},
     account: '0x0',
     init: function () {
+        animateButton();
         return App.initWeb3();
     },
     initWeb3: function () {
@@ -13,7 +14,7 @@ App = {
             web3 = new Web3(web3.currentProvider);
         } else {
             // Specify default instance if no web3 instance provided
-            App.web3Provider = new Web3.providers.HttpProvider('http://l    ocalhost:7545');
+            App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
             web3 = new Web3(App.web3Provider);
         }
         return App.initContract();
@@ -39,7 +40,14 @@ App = {
             return App.render();
         });
     },
-    render: function () {
+    render: function (anim=true) {
+        deanimateButton();
+
+        $(".login-box").fadeOut();
+
+        // show the dashboard section
+        $(".dashboard-section").fadeIn();
+        
         var electionInstance;
         var loader = $("#loader");
         var content = $("#content");
@@ -49,7 +57,7 @@ App = {
         web3.eth.getCoinbase(function (err, account) {
             if (err === null) {
                 App.account = account;
-                $("#accountAddress").html("Your Account: " + account);
+                $(".wallet-address").text(App.account);
             }
         });
         // Load contract data
@@ -57,28 +65,51 @@ App = {
             electionInstance = instance;
             return electionInstance.candidatesCount();
         }).then(function (candidatesCount) {
-            var candidatesResults = $("#candidatesResults");
-            candidatesResults.empty();
+            $(".parties-list").empty();
+
             var candidatesSelect = $('#candidatesSelect');
             candidatesSelect.empty();
+
             for (var i = 1; i <= candidatesCount; i++) {
                 electionInstance.candidates(i).then(function (candidate) {
                     var id = candidate[0];
                     var name = candidate[1];
                     var voteCount = candidate[2];
-                    // Render candidate Result
-                    var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-                    candidatesResults.append(candidateTemplate);
-                    // Render candidate ballot option
-                    var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-                    candidatesSelect.append(candidateOption);
+                    
+                    let toAdd = document.createElement("li");
+                    if(anim) toAdd.style = "display: none";
+                    toAdd.innerHTML = `<input type="radio" value="${id}" id="${id}" name="chosen_party" /> <label for="${id}">${name} (votes: ${voteCount})</label>`;
+                    
+                    $(".parties-list").append(toAdd);
+                    
+
+                    if(i >= candidatesCount){
+                        localStorage.setItem("walletLoaded", "1");
+                        // complete loading
+                        deanimateButton();
+
+                        $(".login-box").fadeOut();
+
+                        // show the dashboard section
+                        $(".dashboard-section").fadeIn();
+                        
+                        if(anim){
+                            $('.parties .parties-list li').each(function(){
+                                var elem = $(this);
+                                setTimeout(function(){
+                                    elem.show(200);
+                                }, 100 * elem.index());
+                            });
+                        }
+                    }
                 });
             }
+
             return electionInstance.voters(App.account);
         }).then(function (hasVoted) {
             // Do not allow a user to vote
             if (hasVoted) {
-                $('form').hide();
+                $('.vote-btn').hide();
             }
             loader.hide();
             content.show();
@@ -87,8 +118,45 @@ App = {
         });
     }
 };
+
+
+function animateButton(){
+    $(".login-btn span").addClass("animated");
+}
+function deanimateButton(){
+    $(".login-btn span").removeClass("animated");
+}
+
 $(function () {
-    $(window).load(function () {
+    if(window.localStorage.getItem("walletLoaded") == "1") {
+        App.init();
+    }
+    $(".login-btn").click(function () {
         App.init();
     });
 });
+
+$(document).on("click", "li", (e) => {
+    $(e.target).find("input").click()
+})
+
+$(".logout-btn").click(() => {
+    $(".login-box").fadeIn();
+
+    // show the dashboard section
+    $(".dashboard-section").fadeOut();
+
+    localStorage.setItem("walletLoaded", "0");
+})
+
+$(".vote-btn").click(() => {
+    let whoToVote = document.querySelector('input[name="chosen_party"]:checked').value;
+    
+    App.contracts.Election.deployed().then(function (instance) {
+        return instance.vote(whoToVote, {from: App.account});
+    }).then(function (result) {
+        App.render(false);
+    }).catch(function (err) {
+        console.error(err);
+    });
+})

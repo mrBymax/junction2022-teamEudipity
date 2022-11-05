@@ -90,4 +90,18 @@
     padding: 8px;
     border-radius: 19px;
   }
+
+  ul {
+    padding: 0;
+  }
   
+  li {
+    color: white;
+    padding: 1em;
+    list-style: none;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+li:nth-child(even) {background: rgba(255,255,255,.5)}
+li:nth-child(odd) {background: rgba(255,255,255,.25)}
