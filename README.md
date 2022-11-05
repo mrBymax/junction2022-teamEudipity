@@ -1,7 +1,7 @@
 # Decentralised Voting System
 
 ### Some Background
-We're currently participating in [Junction Hackathon 2022](https://www.junction2022.com/), in the [Year 2222](https://www.junction2022.com/challenges/) challenge. 
+We're currently participating in [Junction Hackathon 2022](https://www.junction2022.com/), in the [Year 2222](https://www.junction2022.com/challenges/) challenge and in the [Society 2.0](https://www.junction2022.com/challenges/) challenge. 
 This is a project that we've been working on for a while, and we're excited to be able to share it with you all.
 
 ## Project Setup
