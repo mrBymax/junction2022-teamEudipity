@@ -1,8 +1,10 @@
+![funny, right?](/readme/images/funnymemeplsletuswin.png)
+
 # Decentralised Voting System
 
 ### Some Background
 We're currently participating in [Junction Hackathon 2022](https://www.junction2022.com/), in the [Year 2222](https://www.junction2022.com/challenges/) challenge and in the [Society 2.0](https://www.junction2022.com/challenges/) challenge. 
-This is a project that we've been working on for a while, and we're excited to be able to share it with you all.
+During this hackathon we created this solution and we're excited to be able to share it with you all.
 
 ## Project Setup
 ### Prerequisites
@@ -11,10 +13,11 @@ This is a project that we've been working on for a while, and we're excited to b
 - [Ganache](https://www.trufflesuite.com/ganache)
 - [Metamask](https://metamask.io/)
 - [Truffle](https://www.trufflesuite.com/truffle)
-- [IPFS](https://ipfs.io/)
+- [IPFS](https://ipfs.io/)*
 - [Solidity](https://docs.soliditylang.org/en/v0.8.10/installing-solidity.html)
-- [React](https://reactjs.org/)
 - [Web3.js](https://web3js.readthedocs.io/en/v1.5.2/)
+
+_*: not mandadory_
 
 ### Installation
 1. Clone the repo
@@ -29,7 +32,7 @@ This is a project that we've been working on for a while, and we're excited to b
    ```sh
     npm install
     ```
-3. Start Ganache
+3. Start Ganache trough GUI/CLI
 4. Compile and migrate the smart contracts
    ```sh
    truffle migrate
@@ -60,15 +63,21 @@ This is a project that we've been working on for a while, and we're excited to b
     npm run build
     ```
 9. Run the application in production mode
-10. Deploy the application to IPFS
+10. Deploy the application to IPFS (not mandadory)
     ```sh
     ipfs add -r build
     ```
     
 ## Usage
-### Partecipating in a Poll
+### Login
+![Login](./readme/images/login.png)
+
+### Taking part in a Poll
 1. Connect your Metamask wallet to the application
-2. Click on "vote" to express your opinion on a poll
+2. Click on `VOTE` button to express your preference
+
+![Vote](./readme/images/Vote.png)
+
 
 ### Add Candidates
 For now, only governors can add candidates to a poll. To do so, you need to edit the `addCandidate` function in `src/contracts/Election.sol` and then deploy the contract again.

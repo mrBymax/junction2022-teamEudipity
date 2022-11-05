@@ -5,7 +5,10 @@
   }
   
 html {
-height: 100%;
+  height: 100%;
+  --color: #999;
+  --checked-color: #21bf96;
+  --bg-color: #e8e8e8;
 }
 body {
 margin:0;
@@ -103,7 +106,53 @@ background: linear-gradient(#141e30, #243b55);
     list-style: none;
     cursor: pointer;
     margin: 10px 0;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
 }
 
 li:nth-child(even) {background: rgba(255,255,255,.5)}
 li:nth-child(odd) {background: rgba(255,255,255,.25)}
+
+li.selected {
+  background: #000;
+}
+
+input {
+  outline: 2px solid var(--color);
+  height: 1.2rem;
+    width: 1.2rem;
+    margin-right: 0.5rem;
+    /* hiding browser el */
+    appearance: none;
+    /* Safari support */
+    -webkit-appearance: none;
+    border: 0.2rem solid #fff;
+    background-color: var(--bg-color);
+    border-radius: 50%;
+}
+
+input:hover {
+  outline-color: var(--checked-color);
+}
+
+input:checked {
+  outline-color: var(--checked-color);
+  background-color: var(--checked-color);
+
+  animation: outline-checked;
+  animation-duration: 0.1s;
+  animation-iteration-count: 4;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+}
+
+@keyframes outline-checked {
+  0% {
+      outline-offset: 0.2rem;
+  }
+
+  100% {
+      outline-offset: -0.2rem;
+  }
+}

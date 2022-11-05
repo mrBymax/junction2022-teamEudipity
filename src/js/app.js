@@ -78,7 +78,7 @@ App = {
                     
                     let toAdd = document.createElement("li");
                     if(anim) toAdd.style = "display: none";
-                    toAdd.innerHTML = `<input type="radio" value="${id}" id="${id}" name="chosen_party" /> <label for="${id}">${name} (votes: ${voteCount})</label>`;
+                    toAdd.innerHTML = `<input type="radio" value="${id}" name="chosen_party" /> ${name} (votes: ${voteCount})`;
                     
                     $(".parties-list").append(toAdd);
                     
@@ -137,7 +137,9 @@ $(function () {
 });
 
 $(document).on("click", "li", (e) => {
-    $(e.target).find("input").click()
+    $(e.target).find("input").prop("checked", true);
+    $("li").removeClass("selected");
+    $(e.target).addClass("selected");
 })
 
 $(".logout-btn").click(() => {
